@@ -105,32 +105,6 @@ SOC-Dashboard/
 - PDF Incident Reports
 - Real-time Alert Streaming
 
-## 📷 Screenshots
-
-### 🏠 Dashboard
-
-![Dashboard](screenshots/dashboard.png)
-
----
-
-### 🔍 Dashboard with Search & Filters
-
-![Dashboard Filter](screenshots/dashboard-filter.png)
-
----
-
-### 🚨 Alert Investigation
-
-![Investigation](screenshots/investigation.png)
-
----
-
-### 📝 Analyst Investigation Notes
-
-![Notes](screenshots/investigation-notes.png)
-
----
-
 ## 👨‍💻 Author
 
 **Raj Prajapati**
