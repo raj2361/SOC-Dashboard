@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SOC Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+
+<div class="dashboard-container">
+
+    <h1>SOC Dashboard</h1>
+
+    <p class="subtitle">
+        Security Monitoring and Threat Detection
+    </p>
+
+
+    <!-- ALERT CARDS -->
+
+    <div class="alert-container">
+
+        <div class="alert-card">
+
+            <h3>Total Alerts</h3>
+
+            <h2>{{ total_alerts }}</h2>
+
+        </div>
+
+
+        <div class="alert-card">
+
+            <h3>Critical Alerts</h3>
+
+            <h2>{{ critical_alerts }}</h2>
+
+        </div>
+
+
+        <div class="alert-card">
+
+            <h3>High Alerts</h3>
+
+            <h2>{{ high_alerts }}</h2>
+
+        </div>
+
+
+        <div class="alert-card">
+
+            <h3>Medium Alerts</h3>
+
+            <h2>{{ medium_alerts }}</h2>
+
+        </div>
+
+
+        <div class="alert-card">
+
+            <h3>Low Alerts</h3>
+
+            <h2>{{ low_alerts }}</h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SECURITY ANALYTICS -->
+
+    <h2 class="section-title">
+        Security Analytics
+    </h2>
+
+
+    <div class="chart-container">
+
+        <div class="chart-card">
+
+            <h3>
+                Alert Severity Distribution
+            </h3>
+
+
+            <div class="chart-wrapper">
+
+                <canvas id="severityChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ALERT INVESTIGATION -->
+
+    <h2 class="section-title">
+        Alert Investigation
+    </h2>
+
+
+
+    <!-- FILTER -->
+
+    <form method="GET"
+          action="/"
+          class="filter-container">
+
+
+        <div class="filter-group">
+
+            <label>
+                Severity
+            </label>
+
+
+            <select name="severity">
+
+
+                <option value="">
+                    All Severities
+                </option>
+
+
+                <option value="Critical"
+                {% if selected_severity == "Critical" %}
+                selected
+                {% endif %}>
+
+                    Critical
+
+                </option>
+
+
+                <option value="High"
+                {% if selected_severity == "High" %}
+                selected
+                {% endif %}>
+
+                    High
+
+                </option>
+
+
+                <option value="Medium"
+                {% if selected_severity == "Medium" %}
+                selected
+                {% endif %}>
+
+                    Medium
+
+                </option>
+
+
+                <option value="Low"
+                {% if selected_severity == "Low" %}
+                selected
+                {% endif %}>
+
+                    Low
+
+                </option>
+
+
+            </select>
+
+        </div>
+
+
+
+        <div class="filter-group">
+
+            <label>
+                Status
+            </label>
+
+
+            <select name="status">
+
+
+                <option value="">
+                    All Statuses
+                </option>
+
+
+                <option value="Open"
+                {% if selected_status == "Open" %}
+                selected
+                {% endif %}>
+
+                    Open
+
+                </option>
+
+
+                <option value="Investigating"
+                {% if selected_status == "Investigating" %}
+                selected
+                {% endif %}>
+
+                    Investigating
+
+                </option>
+
+
+                <option value="Resolved"
+                {% if selected_status == "Resolved" %}
+                selected
+                {% endif %}>
+
+                    Resolved
+
+                </option>
+
+
+            </select>
+
+        </div>
+
+
+
+        <div class="filter-group">
+
+            <label>
+                Search Alert
+            </label>
+
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Alert name or IP"
+                value="{{ search_query }}"
+            >
+
+        </div>
+
+
+
+        <button
+            type="submit"
+            class="filter-button">
+
+            Apply Filter
+
+        </button>
+
+
+
+        <a href="/"
+           class="clear-button">
+
+            Clear Filter
+
+        </a>
+
+
+    </form>
+
+
+
+    <!-- ALERT TABLE -->
+
+    <div class="table-container">
+
+
+        <table class="alert-table">
+
+
+            <thead>
+
+
+                <tr>
+
+                    <th>
+                        Alert Name
+                    </th>
+
+
+                    <th>
+                        Severity
+                    </th>
+
+
+                    <th>
+                        Status
+                    </th>
+
+
+                    <th>
+                        Source IP
+                    </th>
+
+
+                    <th>
+                        Destination IP
+                    </th>
+
+
+                    <th>
+                        Timestamp
+                    </th>
+
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+
+            </thead>
+
+
+
+            <tbody>
+
+
+            {% for alert in alerts %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        {{ alert[1] }}
+
+                    </td>
+
+
+
+                    <td>
+
+
+                        <span class="severity {{ alert[2]|lower }}">
+
+
+                            {{ alert[2] }}
+
+
+                        </span>
+
+
+                    </td>
+
+
+
+                    <td>
+
+
+                        <span class="status {{ alert[6]|lower }}">
+
+
+                            {{ alert[6] }}
+
+
+                        </span>
+
+
+                    </td>
+
+
+
+                    <td>
+
+                        {{ alert[3] }}
+
+                    </td>
+
+
+
+                    <td>
+
+                        {{ alert[4] }}
+
+                    </td>
+
+
+
+                    <td>
+
+                        {{ alert[5] }}
+
+                    </td>
+
+
+
+                    <td>
+
+
+                        <a
+                        href="{{ url_for('alert_details', alert_id=alert[0]) }}"
+                        class="view-button">
+
+
+                            View Details
+
+
+                        </a>
+
+
+                    </td>
+
+
+                </tr>
+
+
+            {% else %}
+
+
+                <tr>
+
+
+                    <td
+                    colspan="7"
+                    class="no-alerts">
+
+
+                        No alerts found
+
+
+                    </td>
+
+
+                </tr>
+
+
+            {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- SEVERITY CHART -->
+<script>
+    const criticalAlerts = Number("{{ critical_alerts }}");
+    const highAlerts = Number("{{ high_alerts }}");
+    const mediumAlerts = Number("{{ medium_alerts }}");
+    const lowAlerts = Number("{{ low_alerts }}");
+
+    const severityChart = document.getElementById("severityChart");
+
+    new Chart(severityChart, {
+        type: "doughnut",
+
+        data: {
+            labels: [
+                "Critical",
+                "High",
+                "Medium",
+                "Low"
+            ],
+
+            datasets: [{
+                data: [
+                    criticalAlerts,
+                    highAlerts,
+                    mediumAlerts,
+                    lowAlerts
+                ],
+
+                backgroundColor: [
+                    "#dc2626",
+                    "#ea580c",
+                    "#d97706",
+                    "#16a34a"
+                ],
+
+                borderColor: "#111c32",
+                borderWidth: 4
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: "right",
+
+                    labels: {
+                        color: "white",
+
+                        font: {
+                            size: 15
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Auto refresh dashboard every 10 seconds
+    setTimeout(function () {
+        window.location.reload();
+    }, 10000);
+</script>
+
+
+</body>
+
+
+</html>

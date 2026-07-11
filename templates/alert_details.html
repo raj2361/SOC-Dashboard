@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Alert Investigation
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="details-page">
+
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="back-link"
+    >
+
+        ← Back to Dashboard
+
+    </a>
+
+
+    <h1>
+        Alert Investigation
+    </h1>
+
+
+
+    <div class="details-card">
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Alert ID
+            </span>
+
+            <span>
+                {{ alert["id"] }}
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Alert Name
+            </span>
+
+            <span>
+                {{ alert["alert_name"] }}
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Severity
+            </span>
+
+            <span>
+
+                <span class="severity {{ alert['severity']|lower }}">
+
+                    {{ alert["severity"] }}
+
+                </span>
+
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Status
+            </span>
+
+
+            <span>
+
+                <span class="status {{ alert['status']|lower }}">
+
+                    {{ alert["status"] }}
+
+                </span>
+
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Source IP
+            </span>
+
+            <span>
+                {{ alert["source_ip"] }}
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Destination IP
+            </span>
+
+            <span>
+                {{ alert["destination_ip"] }}
+            </span>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Timestamp
+            </span>
+
+            <span>
+                {{ alert["timestamp"] }}
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="status-update-card">
+
+
+        <h2>
+            Analyst Action
+        </h2>
+
+
+        <p>
+            Update investigation status
+        </p>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('update_alert_status', alert_id=alert['id']) }}"
+            class="status-form"
+        >
+
+
+            <select
+                name="status"
+                class="status-select"
+            >
+
+
+                <option
+                    value="Open"
+                    {% if alert["status"] == "Open" %}selected{% endif %}
+                >
+
+                    Open
+
+                </option>
+
+
+                <option
+                    value="Investigating"
+                    {% if alert["status"] == "Investigating" %}selected{% endif %}
+                >
+
+                    Investigating
+
+                </option>
+
+
+                <option
+                    value="Resolved"
+                    {% if alert["status"] == "Resolved" %}selected{% endif %}
+                >
+
+                    Resolved
+
+                </option>
+
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="update-status-btn"
+            >
+
+                Update Status
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+
+    <div class="analyst-notes-card">
+
+
+        <h2>
+            Investigation Notes
+        </h2>
+
+
+        <p>
+            Record analyst findings and investigation activity
+        </p>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('update_analyst_notes', alert_id=alert['id']) }}"
+        >
+
+
+            <textarea
+                name="analyst_notes"
+                class="analyst-notes-textarea"
+                placeholder="Example: Investigated source IP. Suspicious malware communication detected..."
+            >{{ alert["analyst_notes"] or "" }}</textarea>
+
+
+            <button
+                type="submit"
+                class="save-notes-btn"
+            >
+
+                Save Investigation Notes
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
